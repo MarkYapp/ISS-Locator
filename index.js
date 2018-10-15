@@ -1,9 +1,8 @@
 
-const currentCoordinatesEndpoint = "https://api.wheretheiss.at/v1/satellites/25544";
-const mapquestEndpoint = "http://www.mapquestapi.com/geocoding/v1/address";
-const mymap = L.map("map").setView([0.00, 0.00], 2);
+const ISSCoordinatesEndpoint = "https://api.wheretheiss.at/v1/satellites/25544";
+const map = L.map("map");
 const streetLayer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(mymap);
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
 const ISSIcon = L.icon({
     iconUrl: "file:///Users/markyapp/projects/api-capstone/noun_iss_956251.svg",
     iconSize:     [40, 40], // size of the icon
@@ -11,11 +10,15 @@ const ISSIcon = L.icon({
     popupAnchor:  [0, -20], // point of the popup relative to icon's center
 });
 
-// navigator.geolocation.getCurrentPosition(console.log);
+/*request the user allow access to their location
+navigator.geolocation.getCurrentPosition(console.log);*/
 
 function getISSData(callback) {
     const settings = {
-        url: currentCoordinatesEndpoint,
+        url: ISSCoordinatesEndpoint,
+        data: {
+            units: "miles"
+        },
         success: callback,
         error: function(err) {
             console.log("In local error callback."); //work on error function
@@ -24,75 +27,75 @@ function getISSData(callback) {
     $.ajax(settings);
 }
 
+/*set the initial map view to with the ISS centered*/
+function setInitialView(data) {
+    let lat = data.latitude;
+    let lon = data.longitude;
+    map.setView([lat, lon], 4);
+}
 
+/*add the ISS icon to the map*/
 function generateIcon(data) {
-    let currentLat = data.latitude;
-    let currentLon = data.longitude;
+    let lat = data.latitude;
+    let lon = data.longitude;
     let velocity = data.velocity;
     let altitude = data.altitude;
-    let daynum = data.daynum;
     $("img.leaflet-marker-icon").addClass("fade");
-    // console.log(`ISS Coordinates: Latitude: ${currentLat}, Longitude: ${currentLon}`);
-    let issIcon = L.marker([currentLat, currentLon], {icon: ISSIcon, alt: "Icon of the International Space Station", keyboard: true});
-    issIcon.addTo(mymap).addTo(mymap).bindPopup(`Latitude: ${currentLat}<br>Longitude: ${currentLon}`);
+    /*assign the ISS icon to a variable, then add it to the map with the current ISS coordinates, along with a popup that displays data*/
+    let issIcon = L.marker([lat, lon], {icon: ISSIcon, alt: "Icon of the International Space Station", keyboard: true});
+    issIcon.addTo(map).addTo(map).bindPopup(`Latitude: ${lat}<br>Longitude: ${lon}<br>Velocity: ${velocity}<br>Altitude: ${altitude}`);
     // L.circle([currentLat, currentLon], {
     //     color: 'red',
     //     fillColor: '#f03',
     //     fillOpacity: 0.5,
     //     radius: 500
-    // }).addTo(mymap);
+    // }).addTo(map);
 }
 
-$(document).ajaxSuccess(function removeIcon() {
-    console.log(xhr.responseXML);
-    
-})
+/*add search field to map*/
+// L.Control.geocoder().addTo(map);
 
+// function handleUserAddress() {
+//     $(".submit-button").click(event=> {
+//         event.preventDefault();
+//         let userAddress = $(".user-address").val();
+//         console.log(userAddress);
+//         $(".user-address").val("");  //clear input
+//         convertToCoordinates(userAddress, printCoordinates);
+//     });
+// }
 
+// function convertToCoordinates(searchTerm, callback) {
+//     const settings = {
+//         url: bingGeocoderEndpoint,
+//         key: bingAPIKey,
+//         q: searchTerm,
+//         success: callback,
+//         error: function(err) {
+//             console.log("In local error callback.");
+//         }
+//     }
+//     $.ajax(settings);
+// }
 
-// L.marker([51.49, -0.1], {icon: ISSIcon}).addTo(mymap).bindPopup("hello");
-
-L.Control.geocoder().addTo(mymap);
-
-function handleUserAddress() {
-    $(".submit-button").click(event=> {
-        event.preventDefault();
-        let userAddress = $(".user-address").val();
-        console.log(userAddress);
-        $(".user-address").val("");  //clear input
-        convertToCoordinates(userAddress, printCoordinates);
-    });
-}
-
-function convertToCoordinates(searchTerm, callback) {
-    const settings = {
-        url: bingGeocoderEndpoint,
-        key: bingAPIKey,
-        q: searchTerm,
-        success: callback,
-        error: function(err) {
-            console.log("In local error callback.");
-        }
-    }
-    $.ajax(settings);
-}
-
-function printCoordinates(data) {
-    console.log('printCoordinates ran');
-    console.log(data);
-    userLat = data.resourceSets[0].resources[0].point.coordinates[0];
-    userLng = data.resourceSets[0].resources[0].point.coordinates[1];
-    console.log(userLat);
-    console.log(userLng);
-}
+// function printCoordinates(data) {
+//     console.log('printCoordinates ran');
+//     console.log(data);
+//     userLat = data.resourceSets[0].resources[0].point.coordinates[0];
+//     userLng = data.resourceSets[0].resources[0].point.coordinates[1];
+//     console.log(userLat);
+//     console.log(userLng);
+// }
 
 function apiCall() {
     getISSData(generateIcon);
 }
 
+/*run the app at page load. Call getISSData first to set the intial view, second to add the ISS icon on page load, 
+then call setInterval to run getISS data at regular intervals*/
 $(function runApp() {
-
-    setInterval(apiCall, 3000);
-    // setInterval(removeIcon, 3000);
-    handleUserAddress();
+    getISSData(setInitialView);
+    getISSData(generateIcon);
+    setInterval(apiCall, 2000);
+    // handleUserAddress();
 });
