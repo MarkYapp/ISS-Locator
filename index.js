@@ -4,7 +4,7 @@ const map = L.map("map");
 const streetLayer = L.tileLayer("https://{s}.tile.osm.org/{z}/{x}/{y}.png", {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
 const ISSIcon = L.icon({
-    iconUrl: "file:///Users/markyapp/projects/api-capstone/noun_iss_956251.svg",
+    iconUrl: "noun_iss_956251.svg",
     iconSize:     [40, 40], // size of the icon
     iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
     popupAnchor:  [0, -20], // point of the popup relative to icon's center
