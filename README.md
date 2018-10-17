@@ -2,9 +2,11 @@
 
 https://markyapp.github.io/ISS-Locator/
 
-<h2>Screenshots</h2>
+<h3>Summary</h3>
 
-<h2>Built with:</h2>
+<h3>Screenshots</h3>
+
+<h3>Built with:</h3>
 <ul>
   <li>HTML</li>
   <li>CSS</li>
