@@ -14,4 +14,4 @@ https://markyapp.github.io/ISS-Locator/
   <li>jQuery</li>
 </ul>
   
-![screenshot of the iss-locator app](https://raw.github.com/MarkYapp/ISS-Locator/blob/master/iss-locator-screenshot.png)
+![screenshot of the iss-locator app](https://github.com/MarkYapp/ISS-Locator/blob/master/iss-locator-screenshot.png)
