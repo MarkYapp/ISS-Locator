@@ -4,7 +4,6 @@ html, body {
     padding: 0;
   }
   
-/*remove this property, set map to auto-scale to window*/
 #map {
     width: 100vw;
     height: 100vh;
