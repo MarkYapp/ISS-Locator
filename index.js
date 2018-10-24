@@ -10,20 +10,6 @@ const ISSIcon = L.icon({
     popupAnchor:  [0, -20], // point of the popup relative to icon's center
 });
 
-/*API request*/
-// function getISSData(callback) {
-//     const settings = {
-//         url: ISSCoordinatesEndpoint,
-//         data: {
-//             units: "miles"
-//         },
-//         success: callback,
-//         error: function(err) {
-//             console.log("In local error callback."); //work on error function
-//         }
-//     }
-//     $.ajax(settings);
-// }
 
 function getISSData(callback) {
     const url = ISSCoordinatesEndpoint + '?' + "units=miles";
