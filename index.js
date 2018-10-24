@@ -11,18 +11,33 @@ const ISSIcon = L.icon({
 });
 
 /*API request*/
+// function getISSData(callback) {
+//     const settings = {
+//         url: ISSCoordinatesEndpoint,
+//         data: {
+//             units: "miles"
+//         },
+//         success: callback,
+//         error: function(err) {
+//             console.log("In local error callback."); //work on error function
+//         }
+//     }
+//     $.ajax(settings);
+// }
+
 function getISSData(callback) {
-    const settings = {
-        url: ISSCoordinatesEndpoint,
-        data: {
-            units: "miles"
-        },
-        success: callback,
-        error: function(err) {
-            console.log("In local error callback."); //work on error function
-        }
-    }
-    $.ajax(settings);
+    const url = ISSCoordinatesEndpoint + '?' + "units=miles";
+    fetch(url)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJson => callback(responseJson))
+        .catch(err => {
+            $('#js-error-message').text(`Something went wrong: ${err.message}`);
+        });
 }
 
 /*set the initial map view with the ISS centered*/
